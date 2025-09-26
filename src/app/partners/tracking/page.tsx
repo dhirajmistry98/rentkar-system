@@ -5,8 +5,7 @@ import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card'
 import { Button } from '../../../components/ui/button'
 import { Badge } from '../../../components/ui/badge'
-import { ArrowLeft, MapPin, Clock, Truck, Activity, Navigation } from 'lucide-react'
-
+import { ArrowLeft, MapPin, Clock, Truck, Activity, Navigation, Zap, Users, BarChart3, Radio } from 'lucide-react'
 
 interface Partner {
   _id: string
@@ -104,184 +103,334 @@ export default function PartnerTrackingPage() {
     }
   }, [gpsUpdates])
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'online': return 'text-green-400 border-green-500/30 bg-green-500/20'
+      case 'busy': return 'text-orange-400 border-orange-500/30 bg-orange-500/20'
+      case 'offline': return 'text-gray-400 border-gray-500/30 bg-gray-500/20'
+      default: return 'text-gray-400 border-gray-500/30 bg-gray-500/20'
+    }
+  }
+
+  const getStatusGradient = (status: string) => {
+    switch (status) {
+      case 'online': return 'from-green-500/10 to-emerald-600/5 border-green-500/20'
+      case 'busy': return 'from-orange-500/10 to-orange-600/5 border-orange-500/20'  
+      case 'offline': return 'from-gray-500/10 to-gray-600/5 border-gray-500/20'
+      default: return 'from-gray-500/10 to-gray-600/5 border-gray-500/20'
+    }
+  }
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center relative overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+        <div className="text-center relative z-10">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-32 w-32 border-4 border-blue-500/30 border-t-blue-500 mb-6 mx-auto"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Navigation className="h-8 w-8 text-blue-400 animate-pulse" />
+            </div>
+          </div>
+          <p className="text-white text-xl font-semibold">Connecting to GPS Network...</p>
+          <p className="text-gray-400 mt-2">Initializing real-time tracking system</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center gap-4 mb-8">
-          <Button variant="outline" size="icon" asChild>
-            <Link href="/partners">
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
-          </Button>
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              <Activity className="h-8 w-8" />
-              Live Partner Tracking
-            </h1>
-            <p className="text-muted-foreground">Real-time GPS monitoring dashboard</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-500/5 rounded-full blur-2xl"></div>
+      </div>
+
+      {/* Navigation Header */}
+      <nav className="relative z-10 bg-white/5 backdrop-blur-xl border-b border-white/10">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-4">
+              <Button className="bg-white/10 hover:bg-white/20 border-white/20 text-white" asChild>
+                <Link href="/partners">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Partners
+                </Link>
+              </Button>
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center">
+                    <Radio className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-white">Live GPS Tracking</h1>
+                  <p className="text-gray-400 text-sm">Real-time partner monitoring system</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 bg-green-500/20 px-4 py-2 rounded-full border border-green-500/30">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-green-400 text-sm font-medium">System Online</span>
+              </div>
+              <div className="text-gray-400 text-sm">
+                {gpsUpdates.length} GPS Updates
+              </div>
+            </div>
           </div>
+        </div>
+      </nav>
+
+      <div className="container mx-auto px-6 py-8 relative z-10">
+        {/* Statistics Overview */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+          <Card className="bg-gradient-to-br from-green-500/10 to-emerald-600/5 backdrop-blur-xl border-green-500/20 hover:scale-105 transition-all duration-300 group">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm font-medium">Online Partners</p>
+                  <p className="text-3xl font-bold text-green-400 mt-1">
+                    {partners.filter(p => p.status === 'online').length}
+                  </p>
+                </div>
+                <div className="p-3 bg-green-500/20 rounded-xl group-hover:rotate-12 transition-transform duration-300">
+                  <Users className="h-6 w-6 text-green-400" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-orange-500/10 to-orange-600/5 backdrop-blur-xl border-orange-500/20 hover:scale-105 transition-all duration-300 group">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm font-medium">Busy Partners</p>
+                  <p className="text-3xl font-bold text-orange-400 mt-1">
+                    {partners.filter(p => p.status === 'busy').length}
+                  </p>
+                </div>
+                <div className="p-3 bg-orange-500/20 rounded-xl group-hover:rotate-12 transition-transform duration-300">
+                  <Activity className="h-6 w-6 text-orange-400" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-xl border-blue-500/20 hover:scale-105 transition-all duration-300 group">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm font-medium">GPS Updates</p>
+                  <p className="text-3xl font-bold text-blue-400 mt-1">{gpsUpdates.length}</p>
+                </div>
+                <div className="p-3 bg-blue-500/20 rounded-xl group-hover:rotate-12 transition-transform duration-300">
+                  <BarChart3 className="h-6 w-6 text-blue-400" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-xl border-purple-500/20 hover:scale-105 transition-all duration-300 group">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm font-medium">Total Partners</p>
+                  <p className="text-3xl font-bold text-purple-400 mt-1">{partners.length}</p>
+                </div>
+                <div className="p-3 bg-purple-500/20 rounded-xl group-hover:rotate-12 transition-transform duration-300">
+                  <Truck className="h-6 w-6 text-purple-400" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Partner Status Cards */}
-          <div className="lg:col-span-1 space-y-4">
-            <h2 className="text-xl font-semibold mb-4">Active Partners</h2>
-            {partners.map(partner => (
-              <Card key={partner._id}>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Truck className="h-4 w-4" />
-                      <span className="font-medium">{partner.name}</span>
+          {/* Active Partners Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-white mb-2">Active Partners</h2>
+              <p className="text-gray-400">Real-time status monitoring</p>
+            </div>
+            
+            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+              {partners.map(partner => (
+                <Card key={partner._id} className={`bg-gradient-to-br ${getStatusGradient(partner.status)} backdrop-blur-xl border hover:scale-[1.02] transition-all duration-300 group`}>
+                  <CardContent className="p-5">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                            <Truck className="h-6 w-6 text-white" />
+                          </div>
+                          <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full ${
+                            partner.status === 'online' ? 'bg-green-400 animate-pulse' :
+                            partner.status === 'busy' ? 'bg-orange-400' : 'bg-gray-400'
+                          }`}></div>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-white">{partner.name}</h3>
+                          <Badge className={`text-xs ${getStatusColor(partner.status)} border`}>
+                            {partner.status.toUpperCase()}
+                          </Badge>
+                        </div>
+                      </div>
                     </div>
-                    <Badge variant={partner.status === 'online' ? 'default' : partner.status === 'busy' ? 'secondary' : 'destructive'}>
-                      {partner.status}
-                    </Badge>
-                  </div>
-                  
-                  <div className="space-y-1 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-3 w-3" />
-                      <span className="font-mono">
-                        {partner.location.lat.toFixed(4)}, {partner.location.lng.toFixed(4)}
-                      </span>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-gray-300 bg-white/5 p-3 rounded-lg">
+                        <MapPin className="h-4 w-4 text-blue-400" />
+                        <span className="font-mono text-sm">
+                          {partner.location.lat.toFixed(4)}, {partner.location.lng.toFixed(4)}
+                        </span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 text-gray-300 bg-white/5 p-3 rounded-lg">
+                        <Clock className="h-4 w-4 text-green-400" />
+                        <span className="text-sm">
+                          {new Date(partner.lastGpsUpdate).toLocaleTimeString()}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      <span>{new Date(partner.lastGpsUpdate).toLocaleTimeString()}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
 
           {/* Live Updates Feed */}
           <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Navigation className="h-5 w-5" />
-                  Live GPS Updates Feed
-                </CardTitle>
-                <CardDescription>
-                  Real-time location updates from all active partners
-                </CardDescription>
+            <Card className="bg-white/10 backdrop-blur-xl border-white/20 h-full">
+              <CardHeader className="border-b border-white/10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg">
+                      <Navigation className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-white text-xl">Live GPS Updates Feed</CardTitle>
+                      <CardDescription className="text-gray-400">
+                        Real-time location updates from all active partners
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-full border border-green-500/30">
+                    <Zap className="h-4 w-4 text-green-400" />
+                    <span className="text-green-400 text-sm font-medium">Live Stream</span>
+                  </div>
+                </div>
               </CardHeader>
               
-              <CardContent>
+              <CardContent className="p-6">
                 <div 
                   ref={tableRef}
-                  className="max-h-[600px] overflow-y-auto border rounded-lg"
+                  className="max-h-[500px] overflow-y-auto bg-white/5 rounded-xl border border-white/10"
                 >
-                  <table className="w-full">
-                    <thead className="bg-muted/50 sticky top-0">
-                      <tr>
-                        <th className="text-left p-3 text-sm font-medium">Time</th>
-                        <th className="text-left p-3 text-sm font-medium">Partner</th>
-                        <th className="text-left p-3 text-sm font-medium">Location</th>
-                        <th className="text-left p-3 text-sm font-medium">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {gpsUpdates.length === 0 ? (
-                        <tr>
-                          <td colSpan={4} className="text-center p-12 text-muted-foreground">
-                            <div className="flex flex-col items-center gap-2">
-                              <Navigation className="h-8 w-8 opacity-50" />
-                              <p>Waiting for GPS updates...</p>
-                              <p className="text-xs">Updates will appear here automatically</p>
+                  {gpsUpdates.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                      <div className="relative mb-6">
+                        <div className="w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center">
+                          <Navigation className="h-10 w-10 text-blue-400 animate-pulse" />
+                        </div>
+                        <div className="absolute inset-0 rounded-full border-2 border-blue-500/30 animate-ping"></div>
+                      </div>
+                      <h3 className="text-xl font-semibold text-white mb-2">Initializing GPS Network</h3>
+                      <p className="text-gray-400 mb-1">Waiting for location updates...</p>
+                      <p className="text-gray-500 text-sm">Updates will appear here automatically</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      {gpsUpdates.slice(-50).reverse().map((update, index) => (
+                        <div 
+                          key={index} 
+                          className={`flex items-center justify-between p-4 rounded-lg transition-all duration-300 hover:bg-white/10 ${
+                            index === 0 ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 shadow-lg' : 'bg-white/5'
+                          }`}
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="relative">
+                              <div className={`w-3 h-3 rounded-full ${
+                                index === 0 ? 'bg-green-400 animate-pulse shadow-lg shadow-green-400/50' : 'bg-blue-400'
+                              }`}></div>
+                              {index === 0 && (
+                                <div className="absolute inset-0 rounded-full border-2 border-green-400/50 animate-ping"></div>
+                              )}
                             </div>
-                          </td>
-                        </tr>
-                      ) : (
-                        gpsUpdates.slice(-100).reverse().map((update, index) => (
-                          <tr 
-                            key={index} 
-                            className={`border-b hover:bg-muted/50 ${index === 0 ? 'bg-green-50 dark:bg-green-950/20' : ''}`}
-                          >
-                            <td className="p-3 text-sm">
-                              {new Date(update.timestamp).toLocaleTimeString()}
-                            </td>
-                            <td className="p-3 text-sm font-medium">
-                              {update.partnerName}
-                            </td>
-                            <td className="p-3 text-sm font-mono">
-                              {update.location.lat.toFixed(6)}, {update.location.lng.toFixed(6)}
-                            </td>
-                            <td className="p-3">
-                              <div className="flex items-center gap-1">
-                                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                                <span className="text-xs text-green-600 font-medium">LIVE</span>
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
+                            <div>
+                              <p className="font-medium text-white text-sm">
+                                {update.partnerName}
+                              </p>
+                              <p className="text-gray-400 text-xs">
+                                {new Date(update.timestamp).toLocaleTimeString()}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <p className="font-mono text-white text-sm">
+                                {update.location.lat.toFixed(6)}, {update.location.lng.toFixed(6)}
+                              </p>
+                            </div>
+                            <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${
+                              index === 0 ? 'bg-green-500/30 border border-green-500/50' : 'bg-blue-500/20 border border-blue-500/30'
+                            }`}>
+                              <div className={`w-2 h-2 rounded-full ${
+                                index === 0 ? 'bg-green-400 animate-pulse' : 'bg-blue-400'
+                              }`}></div>
+                              <span className={`text-xs font-medium ${
+                                index === 0 ? 'text-green-400' : 'text-blue-400'
+                              }`}>
+                                {index === 0 ? 'LIVE' : 'UPDATE'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                <div className="flex justify-between items-center mt-4 text-sm text-muted-foreground">
-                  <span>
-                    Total updates: {gpsUpdates.length}
-                  </span>
-                  <span>
-                    Showing last {Math.min(100, gpsUpdates.length)} updates
-                  </span>
+                <div className="flex justify-between items-center mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
+                  <div className="flex items-center gap-2 text-gray-400 text-sm">
+                    <BarChart3 className="h-4 w-4" />
+                    <span>Total updates: <span className="text-white font-medium">{gpsUpdates.length}</span></span>
+                  </div>
+                  <div className="text-gray-400 text-sm">
+                    Showing last <span className="text-white font-medium">{Math.min(50, gpsUpdates.length)}</span> updates
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
         </div>
-
-        {/* Statistics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-          <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-2xl font-bold text-green-600">
-                {partners.filter(p => p.status === 'online').length}
-              </p>
-              <p className="text-sm text-muted-foreground">Online</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-2xl font-bold text-yellow-600">
-                {partners.filter(p => p.status === 'busy').length}
-              </p>
-              <p className="text-sm text-muted-foreground">Busy</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-2xl font-bold text-blue-600">
-                {gpsUpdates.length}
-              </p>
-              <p className="text-sm text-muted-foreground">GPS Updates</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-2xl font-bold text-purple-600">
-                {partners.length}
-              </p>
-              <p className="text-sm text-muted-foreground">Total Partners</p>
-            </CardContent>
-          </Card>
-        </div>
       </div>
+
+      {/* Custom Scrollbar Styles */}
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.5);
+        }
+      `}</style>
     </div>
   )
 }

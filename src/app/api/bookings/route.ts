@@ -1,5 +1,6 @@
+// src/app/api/bookings/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { connectToDatabase } from '@/lib/mongodb'
+import { connectToDatabase } from '../../../lib/mongodb'
 
 export async function GET() {
   try {

@@ -1,5 +1,6 @@
+// src/app/api/bookings/[id]/assign-partner/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { BookingService } from '@/lib/services/booking.service';
+import { BookingService } from '../../../../../lib/services/booking.service';
 
 export async function POST(
   request: NextRequest,

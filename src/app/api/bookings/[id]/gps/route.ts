@@ -1,5 +1,6 @@
+// src/app/api/bookings/[id]/gps/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { PartnerService } from '@/lib/services/partner.service';
+import { PartnerService } from '../../../../../lib/services/partner.service';
 
 export async function POST(
   request: NextRequest,
