@@ -466,18 +466,17 @@ export default function BookingsPage() {
     alert(`Partner assigned to booking ${bookingId.slice(-8)}`)
   }
 
-  const handleConfirmBooking = async (bookingId: string) => {
+   const handleConfirmBooking = async (bookingId: string) => {
     await new Promise(resolve => setTimeout(resolve, 1000))
     
     setBookings(prev => prev.map(booking => 
       booking._id === bookingId 
-        ? { ...booking, status: 'CONFIRMED', lockedBy: undefined }
+        ? { ...booking, status: 'CONFIRMED' }
         : booking
     ))
     
     alert(`Booking ${bookingId.slice(-8)} confirmed successfully!`)
   }
-
   const handleReviewDocuments = async (bookingId: string, reviews: any[]) => {
     await new Promise(resolve => setTimeout(resolve, 1000))
     
